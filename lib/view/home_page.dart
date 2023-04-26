@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class MarvelScreen extends StatefulWidget {
@@ -31,14 +32,10 @@ class _MarvelScreenState extends State<MarvelScreen> {
     return Scaffold(
         backgroundColor: Colors.black87,
         appBar: AppBar(
-          backgroundColor: Colors.red.shade900,
-          title: const Text(
-            'Personagens da Marvel',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
+          backgroundColor: Colors.black,
+          title: Image.asset(
+            "marvelLogo.png",
+            width: 90,
           ),
           centerTitle: true,
         ),
@@ -60,7 +57,146 @@ class _MarvelScreenState extends State<MarvelScreen> {
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    tileMode: TileMode.clamp,
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    colors: [
+                                      Colors.red.shade900,
+                                      Colors.black,
+                                      Colors.black,
+                                      Colors.red.shade900,
+                                    ],
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                        ),
+                                        child: Image.network(
+                                            character['thumbnail']['path'] +
+                                                '.' +
+                                                character['thumbnail']
+                                                    ['extension'],
+                                            width: 95,
+                                            height: 80,
+                                            fit: BoxFit.cover),
+                                      ),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Name: ",
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            character['name'],
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      Row(
+                                        children: const [
+                                          Text(
+                                            "Description: ",
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 300,
+                                              height: 100,
+                                              child: Wrap(
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    character['description'],
+                                                    style: const TextStyle(
+                                                        color: Colors.redAccent,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Center(
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    Get.back();
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.close,
+                                                    size: 15,
+                                                    color: Colors.white,
+                                                  )),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                         child: Container(
                           margin: const EdgeInsets.only(
                               left: 10, top: 20, right: 10, bottom: 10),
@@ -68,9 +204,10 @@ class _MarvelScreenState extends State<MarvelScreen> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
+                              tileMode: TileMode.clamp,
                               colors: [
+                                Colors.red.shade900,
+                                Colors.black87,
                                 Colors.black87,
                                 Colors.red.shade900,
                               ],
@@ -78,7 +215,7 @@ class _MarvelScreenState extends State<MarvelScreen> {
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: const [
                               BoxShadow(
-                                color: Colors.black38,
+                                color: Colors.black,
                                 blurRadius: 10,
                                 spreadRadius: 2,
                                 offset: Offset(2, 2), //
@@ -112,9 +249,10 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                       character['name'],
                                       style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
