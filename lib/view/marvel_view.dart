@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../controller/controller.dart';
 
@@ -14,31 +13,8 @@ class MarvelScreen extends StatefulWidget {
   _MarvelScreenState createState() => _MarvelScreenState();
 }
 
-class _MarvelScreenState extends State<MarvelScreen>  with WidgetsBindingObserver{
+class _MarvelScreenState extends State<MarvelScreen> {
   final MarvelController marvelController = Get.put(MarvelController());
-
-   @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  //verifica state ciclo
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused) {
-      clearCache();
-    }
-  }
-
-  // limpa o cache
-  Future<void> clearCache() async {
-    final directory = await getTemporaryDirectory();
-    if (directory.existsSync()) {
-      directory.deleteSync(recursive: true);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,10 +105,12 @@ class _MarvelScreenState extends State<MarvelScreen>  with WidgetsBindingObserve
                                           ),
                                           Text(
                                             character['name'],
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
+                                            style: GoogleFonts.marvel(
+                                              textStyle: const TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 28,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -162,8 +140,14 @@ class _MarvelScreenState extends State<MarvelScreen>  with WidgetsBindingObserve
                                                 crossAxisAlignment:
                                                     WrapCrossAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    character['description'],
+                                                  Text(character['description'] ?? const Text(
+                                                      "no description, still added by marvel...",
+                                                      style: TextStyle(
+                                                          color: Colors.redAccent,
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )  ,
                                                     style: const TextStyle(
                                                         color: Colors.redAccent,
                                                         fontSize: 10,
