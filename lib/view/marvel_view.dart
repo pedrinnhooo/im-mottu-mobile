@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +16,12 @@ class MarvelScreen extends StatefulWidget {
 
 class _MarvelScreenState extends State<MarvelScreen> {
   final MarvelController marvelController = Get.put(MarvelController());
+  
+  String searchText = '';
+  final pageController = PageController();
+  int currentPage = 0;
+  int itemsPerPage = 10;
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +34,72 @@ class _MarvelScreenState extends State<MarvelScreen> {
             width: 90,
           ),
           centerTitle: true,
+          actions:  [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child:  IconButton(
+                icon: const FaIcon(FontAwesomeIcons.globe, color: Colors.white, size: 20,), 
+                onPressed: () {
+                 
+                 }
+              )
+            ),
+          ],
         ),
-      body: Obx(() => Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: Colors.transparent,
-          child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 230,
-                mainAxisExtent: 215,
-                crossAxisSpacing: 2,
+        
+      body: Obx(() => SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 8),
+              child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  searchText = value;
+                });
+              },
+              style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold,),
+              decoration:  InputDecoration(
+                hintText: 'Pesquisar personagens',
+                hintStyle: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold,),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(
+                    color: Colors.white,
+                    style: BorderStyle.solid,
+                    width: 1,
+                  )
+                ),
+                
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(
+                    color: Colors.white,
+                    style: BorderStyle.solid,
+                    width: 0.5,
+                  )
+                ),
+                prefixIcon: const Icon(Icons.search, color: Colors.white, size: 18,)
               ),
-              itemCount: marvelController.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                final character = marvelController.data[index];
+            ),
+            ),
+            
+
+             Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.transparent,
+                child: 
+                
+                GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 230,
+                        mainAxisExtent: 215,
+                        crossAxisSpacing: 2,
+                      ),
+                      itemCount: marvelController.data.where((character) => character['name'].toLowerCase().contains(searchText.toLowerCase())).length,
+                      itemBuilder: (BuildContext context, int index) {
+                  final character = marvelController.data.where((character) => character['name'].toLowerCase().contains(searchText.toLowerCase())).toList()[index];
                 return Padding(
                   padding: const EdgeInsets.all(16),
                   child: SizedBox(
@@ -48,49 +107,48 @@ class _MarvelScreenState extends State<MarvelScreen> {
                       child: InkWell(
                         onTap: () {
                           showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
+                        context: context,
+                        isScrollControlled: true,
+                        useRootNavigator: true,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height,
+                            decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     tileMode: TileMode.clamp,
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
                                     colors: [
-                                      Colors.red.shade900,
+                                      Colors.grey.shade900,
                                       Colors.black,
-                                      Colors.black,
-                                      Colors.red.shade900,
                                     ],
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 200,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                        ),
-                                        child: Image.network(
-                                            character['thumbnail']['path'] +
-                                                '.' +
-                                                character['thumbnail']
-                                                    ['extension'],
-                                            width: 95,
-                                            height: 80,
-                                            fit: BoxFit.cover),
+                            child: Column(
+                              children:  [
+                                Container(
+                                  width:
+                                    MediaQuery.of(context).size.width,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(40),
                                       ),
-                                      const SizedBox(
+                                      child: Image.network(
+                                          character['thumbnail']['path'] +
+                                              '.' +
+                                              character['thumbnail']
+                                                  ['extension'],
+                                          width: 95,
+                                          height: 80,
+                                          fit: BoxFit.cover),
+                                        ),
+                                        const SizedBox(
                                         height: 40,
                                       ),
-                                      Row(
+                                          Padding(
+                                          padding:  const EdgeInsets.only(left: 20),
+                                          child: Row(
                                         children: [
                                           const Text(
                                             "Name: ",
@@ -105,22 +163,26 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                           ),
                                           Text(
                                             character['name'],
-                                            style: GoogleFonts.marvel(
+                                            style: GoogleFonts.luckiestGuy(
                                               textStyle: const TextStyle(
                                                 color: Colors.redAccent,
-                                                fontSize: 28,
+                                                fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
+                                        ),
+                                          
                                       const SizedBox(
                                         height: 40,
                                       ),
                                       Row(
                                         children: const [
-                                          Text(
+                                          Padding(
+                                          padding:  EdgeInsets.only(left: 20),
+                                          child: Text(
                                             "Description: ",
                                             style: TextStyle(
                                               color: Colors.grey,
@@ -128,11 +190,14 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
+                                        )
+                                          
                                         ],
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(5),
                                         child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
                                               width: 300,
@@ -150,7 +215,7 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                                     )  ,
                                                     style: const TextStyle(
                                                         color: Colors.redAccent,
-                                                        fontSize: 10,
+                                                        fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -160,40 +225,55 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                           ],
                                         ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            width: 30,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                              color: Colors.red,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Center(
-                                              child: InkWell(
-                                                  onTap: () {
-                                                    Get.back();
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.close,
-                                                    size: 15,
-                                                    color: Colors.white,
-                                                  )),
+                                     const  SizedBox(
+                                            height: 35,
+                                          ),
+                                        Padding(
+                                          padding:  const EdgeInsets.only(left: 20),
+                                          child: Row(
+                                        children: const  [
+                                           Text(
+                                            "Related: ",
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                                        ),
+                                        const  SizedBox(
+                                            height: 35,
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            height: MediaQuery.of(context).size.height,
+                                          )),
+                                          Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Container(
+                                              margin: const EdgeInsets.all(30),
+                                            width: 35,
+                                            height: 35,
+                                            decoration: BoxDecoration(
+                                              color: Colors.red.shade900,
+                                              borderRadius: BorderRadius.circular(20),
+                                            ),
+                                            child: const Icon(Icons.close, color: Colors.white, size: 14,),
+                                          ),
+                                          ),
+                                           
+                                      ],
+                                    ),
+                                  );
+                                },
                           );
                         },
-                        child: Container(
+                        child: 
+                        Container(
                           margin: const EdgeInsets.only(
                               left: 10, top: 20, right: 10, bottom: 10),
                           height: 300,
@@ -212,9 +292,9 @@ class _MarvelScreenState extends State<MarvelScreen> {
                             boxShadow: const [
                               BoxShadow(
                                 color: Colors.black,
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                                offset: Offset(2, 2), //
+                                blurRadius: 3,
+                                spreadRadius: 3,
+                                offset: Offset(1, 1), //
                               ),
                             ],
                           ),
@@ -263,7 +343,12 @@ class _MarvelScreenState extends State<MarvelScreen> {
                       )),
                 );
               }),
-        )),
+        )
+          ],
+        ),
+      )
+      
+     ),
     );
   }
 }

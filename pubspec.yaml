@@ -14,14 +14,15 @@ dependencies:
 
   get:
   http:
-  dio:
   crypto:
   flutter_cache_manager:
   path_provider:
   shared_preferences:
   google_fonts:
+  font_awesome_flutter:
   flutter_native_splash: ^2.2.19
   flutter_launcher_icons: ^0.13.1
+  webview_flutter: ^4.2.0
   cupertino_icons: ^1.0.2
 
 flutter_native_splash:
@@ -52,6 +53,7 @@ flutter:
   assets:
     - assets/marvelLogo.png
     - assets/marvelSplash.jpeg
+    - assets/marvel.png
 
   
 

@@ -53,5 +53,10 @@ class MarvelController extends GetxController {
   }
 
   // limpa o cache
- 
+  @override
+  void onClose() {
+    super.onClose();
+    DefaultCacheManager().emptyCache();
+   
+  }
 }
