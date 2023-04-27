@@ -14,8 +14,29 @@ dependencies:
 
   get:
   http:
+  dio:
   crypto:
+  flutter_cache_manager:
+  path_provider:
+  shared_preferences:
+  google_fonts:
+  flutter_native_splash: ^2.2.19
+  flutter_launcher_icons: ^0.13.1
   cupertino_icons: ^1.0.2
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/marvelSplash.jpeg"
+  android: true
+  ios: true
+
+flutter_icons:
+  image_path: "assets/marvelSplash.jpeg"
+  ios: true
+  remove_alpha_ios: true
+  android: "launcher_icon"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/marvelSplash.jpeg"
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +51,7 @@ flutter:
 
   assets:
     - assets/marvelLogo.png
+    - assets/marvelSplash.jpeg
 
   
 

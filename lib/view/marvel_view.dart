@@ -1,8 +1,10 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
+
+import '../controller/controller.dart';
+
 
 class MarvelScreen extends StatefulWidget {
   const MarvelScreen({super.key});
@@ -12,46 +14,57 @@ class MarvelScreen extends StatefulWidget {
   _MarvelScreenState createState() => _MarvelScreenState();
 }
 
-class _MarvelScreenState extends State<MarvelScreen> {
-  final publicKey = '5a174474ee6fd07dc7a6a444ba42798c';
-  final privateKey = '338d08dc154d763aaceb9446d5d3fb2f1462ebc0';
-  final ts = DateTime.now().millisecondsSinceEpoch.toString();
-  late String _hash;
+class _MarvelScreenState extends State<MarvelScreen>  with WidgetsBindingObserver{
+  final MarvelController marvelController = Get.put(MarvelController());
 
-  List<dynamic> _data = [];
+   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
+  //verifica state ciclo
   @override
-  void initState() {
-    super.initState();
-    _hash = generateMd5(ts + privateKey + publicKey);
-    _getData();
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      clearCache();
+    }
+  }
+
+  // limpa o cache
+  Future<void> clearCache() async {
+    final directory = await getTemporaryDirectory();
+    if (directory.existsSync()) {
+      directory.deleteSync(recursive: true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black87,
+      backgroundColor: Colors.grey.shade900,
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Image.asset(
-            "marvelLogo.png",
+            "assets/marvelLogo.png",
             width: 90,
           ),
           centerTitle: true,
         ),
-        body: Container(
+      body: Obx(() => Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           color: Colors.transparent,
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 230,
-                mainAxisExtent: 210,
+                mainAxisExtent: 215,
                 crossAxisSpacing: 2,
               ),
-              itemCount: _data.length,
+              itemCount: marvelController.data.length,
               itemBuilder: (BuildContext context, int index) {
-                final character = _data[index];
+                final character = marvelController.data[index];
                 return Padding(
                   padding: const EdgeInsets.all(16),
                   child: SizedBox(
@@ -145,7 +158,6 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                           children: [
                                             SizedBox(
                                               width: 300,
-                                              height: 100,
                                               child: Wrap(
                                                 crossAxisAlignment:
                                                     WrapCrossAlignment.start,
@@ -154,7 +166,7 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                                     character['description'],
                                                     style: const TextStyle(
                                                         color: Colors.redAccent,
-                                                        fontSize: 14,
+                                                        fontSize: 10,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -200,7 +212,7 @@ class _MarvelScreenState extends State<MarvelScreen> {
                         child: Container(
                           margin: const EdgeInsets.only(
                               left: 10, top: 20, right: 10, bottom: 10),
-                          height: 200,
+                          height: 300,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -247,13 +259,17 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                   child: Center(
                                     child: Text(
                                       character['name'],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
+                                      style: GoogleFonts.marvel(
+                                        textStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
+                                    
                                   ),
                                 ),
                               ),
@@ -263,20 +279,7 @@ class _MarvelScreenState extends State<MarvelScreen> {
                       )),
                 );
               }),
-        ));
-  }
-
-  Future<void> _getData() async {
-    final url =
-        'https://gateway.marvel.com/v1/public/characters?ts=$ts&apikey=$publicKey&hash=$_hash';
-    final response = await http.get(Uri.parse(url));
-    final data = jsonDecode(response.body);
-    setState(() {
-      _data = data['data']['results'];
-    });
-  }
-
-  String generateMd5(String input) {
-    return md5.convert(utf8.encode(input)).toString();
+        )),
+    );
   }
 }
