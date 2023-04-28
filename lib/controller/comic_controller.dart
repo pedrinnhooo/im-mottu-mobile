@@ -5,7 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-class MarvelController extends GetxController {
+class ComicsController extends GetxController {
   final String publicKey = '5a174474ee6fd07dc7a6a444ba42798c';
   final String privateKey = '338d08dc154d763aaceb9446d5d3fb2f1462ebc0';
   final String ts = DateTime.now().millisecondsSinceEpoch.toString();
@@ -39,7 +39,7 @@ class MarvelController extends GetxController {
   // pega os dados da api
   Future<void> _getData() async {
     final url =
-        'https://gateway.marvel.com/v1/public/characters?ts=$ts&apikey=$publicKey&hash=$_hash';
+        'https://gateway.marvel.com/v1/public/comics?ts=$ts&apikey=$publicKey&hash=$_hash';
     final response = await http.get(Uri.parse(url));
     final responseData = jsonDecode(response.body);
     final results = responseData['data']['results'];

@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:marvel/view/marvel_view.dart';
 
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       debugShowCheckedModeBanner: false,
-      home:  MarvelScreen(),
+      home:  const MarvelScreen(),
     );
   }
 }
