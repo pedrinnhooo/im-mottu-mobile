@@ -8,6 +8,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class MarvelController extends GetxController {
   final String publicKey = '5a174474ee6fd07dc7a6a444ba42798c';
   final String privateKey = '338d08dc154d763aaceb9446d5d3fb2f1462ebc0';
+
   final String ts = DateTime.now().millisecondsSinceEpoch.toString();
   late String _hash;
 

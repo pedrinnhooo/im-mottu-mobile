@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marvel/view/comics.view.dart';
 
-import '../controller/comic_controller.dart';
-import '../controller/controller.dart';
+import '../controller/character_controller.dart';
 
 class MarvelScreen extends StatefulWidget {
   const MarvelScreen({super.key});
@@ -17,7 +15,6 @@ class MarvelScreen extends StatefulWidget {
 
 class _MarvelScreenState extends State<MarvelScreen> {
   final MarvelController marvelController = Get.put(MarvelController());
-  final ComicsController comicsController = Get.put(ComicsController());
 
   String searchText = '';
   final pageController = PageController();
@@ -231,7 +228,7 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                                       children: [
                                                         Text(
                                                           character[
-                                                                  'description'] ,
+                                                              'description'],
                                                           style: const TextStyle(
                                                               color: Colors
                                                                   .redAccent,
@@ -266,16 +263,44 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                                 ],
                                               ),
                                             ),
-
                                             const SizedBox(
-                                              height: 35,
+                                              height: 15,
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 20),
-                                              child: ComicsView(),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  top: 20, left: 20, right: 20),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 210,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.redAccent,
+                                                      style: BorderStyle.solid,
+                                                      width: 0.5)),
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.vertical,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10, right: 10),
+                                                  child: Wrap(
+                                                    spacing: 8,
+                                                    children: (character[
+                                                                    'comics']
+                                                                ['items']
+                                                            as List<dynamic>)
+                                                        .map<Chip>(
+                                                            (comic) => Chip(
+                                                                  label: Text(
+                                                                      comic[
+                                                                          'name']),
+                                                                ))
+                                                        .toList(),
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-
-
                                             Expanded(
                                                 flex: 1,
                                                 child: SizedBox(
@@ -298,7 +323,8 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                                   decoration: BoxDecoration(
                                                     color: Colors.red.shade900,
                                                     borderRadius:
-                                                        BorderRadius.circular(20),
+                                                        BorderRadius.circular(
+                                                            20),
                                                   ),
                                                   child: const Icon(
                                                     Icons.close,
@@ -320,15 +346,7 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                   height: 300,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      tileMode: TileMode.clamp,
-                                      colors: [
-                                        Colors.red.shade900,
-                                        Colors.black87,
-                                        Colors.black87,
-                                        Colors.red.shade900,
-                                      ],
-                                    ),
+                                    color: Colors.black87,
                                     borderRadius: BorderRadius.circular(20),
                                     boxShadow: const [
                                       BoxShadow(
@@ -347,22 +365,22 @@ class _MarvelScreenState extends State<MarvelScreen> {
                                         padding: const EdgeInsets.only(top: 12),
                                         child: ClipOval(
                                           child: Material(
-                                            child: Image.network(
-                                                character['thumbnail']['path'] +
-                                                    '.' +
-                                                    character['thumbnail']
-                                                        ['extension'],
-                                                width: 95,
-                                                height: 80,
-                                                fit: BoxFit.cover),
-                                          ),
+                                              child: Image.network(
+                                                  character['thumbnail']
+                                                          ['path'] +
+                                                      '.' +
+                                                      character['thumbnail']
+                                                          ['extension'],
+                                                  width: 95,
+                                                  height: 80,
+                                                  fit: BoxFit.cover)),
                                         ),
                                       ),
                                       SizedBox(
                                         width: 150,
                                         child: Padding(
                                           padding: const EdgeInsets.only(
-                                              top: 14, left: 10),
+                                              top: 14, left: 8, right: 8),
                                           child: Center(
                                             child: Text(
                                               character['name'],

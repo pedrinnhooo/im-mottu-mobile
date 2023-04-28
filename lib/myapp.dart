@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:marvel/view/marvel_view.dart';
+import 'package:marvel/view/character_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
